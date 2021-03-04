@@ -2,5 +2,6 @@
     <string name="app_name">ApplicationRocioSieiro</string>
 
     <string name="empty_text">No se ha encontrado ningún artista con este nombre</string>
+    <string name="zoom">ZOOM</string>
 
 </resources>

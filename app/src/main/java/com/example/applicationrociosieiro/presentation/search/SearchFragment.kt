@@ -1,12 +1,19 @@
 package com.example.applicationrociosieiro.presentation.search
 
-import android.text.Editable
-import android.text.TextWatcher
+import android.content.Context
+import android.content.Intent
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.applicationrociosieiro.R
 import com.example.applicationrociosieiro.common.entities.artists.ArtistItemEntity
 import com.example.applicationrociosieiro.presentation.components.recyclerSearchResults.SearchResultsAdapter
+import com.example.applicationrociosieiro.presentation.search.artistdetail.ArtistDetailViewEntry
 import com.example.base.presentation.BaseFragment
 import kotlinx.android.synthetic.main.search_fragment_layout.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -22,22 +29,26 @@ class SearchFragment : BaseFragment<SearchFragmentState, SearchFragmentTransitio
 
     override fun initViews() {
         initAdapter()
+        etSearch?.requestKeyboardFocus()
         ivSearch.setOnClickListener {
+            etSearch?.clearKeyboardFocus()
             viewModel.search(etSearch.text.toString())
         }
-        etSearch.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(p0: Editable?) {}
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
-              /*  //ivClearSearchDialog.isVisible = !p0.isNullOrEmpty()
-
-                if (p0.toString().isNotEmpty())
-                   // clResults.visibility = View.VISIBLE
-                else
-                  //  clResults.visibility = View.INVISIBLE
-*/
+        etSearch.setOnEditorActionListener { v, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE && v.text.isNotEmpty()) {
+                etSearch?.clearKeyboardFocus()
             }
+            true
+        }
+
+        etSearch.setOnEditorActionListener(TextView.OnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                etSearch?.clearKeyboardFocus()
+                viewModel.search(etSearch.text.toString())
+                return@OnEditorActionListener true
+            }
+            false
         })
     }
 
@@ -79,11 +90,33 @@ class SearchFragment : BaseFragment<SearchFragmentState, SearchFragmentTransitio
 
     }
 
-    override fun onShareSelected(bulletin: ArtistItemEntity) {
-        //Do nothing
+    override fun onShareSelected(artist: ArtistItemEntity) {
+        val shareIntent = Intent(Intent.ACTION_SEND)
+        shareIntent.type = "text/plain"
+        shareIntent.putExtra(Intent.EXTRA_TEXT, artist.externalUrls?.spotify ?: artist.name)
+        shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT)
+        context?.let {
+            ContextCompat.startActivity(
+                it,
+                Intent.createChooser(shareIntent, null),
+                null
+            )
+        }
     }
 
-    override fun onArtistSelected(bulletin: ArtistItemEntity) {
-        //Do nothing
+    override fun onArtistSelected(id: String) {
+        findNavController().navigate(SearchFragmentDirections.actionSearchFragmentToArtistDetailFragment(ArtistDetailViewEntry.ArtistEntry(id)))
+    }
+
+    private fun EditText.requestKeyboardFocus() {
+        requestFocus()
+        (context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
+            .showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
+    }
+
+    private fun EditText.clearKeyboardFocus() {
+        clearFocus()
+        (context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
+            .hideSoftInputFromWindow(windowToken, InputMethodManager.HIDE_IMPLICIT_ONLY)
     }
 }

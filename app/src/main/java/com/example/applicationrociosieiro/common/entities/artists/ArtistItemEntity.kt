@@ -8,12 +8,12 @@ import kotlinx.android.parcel.Parcelize
 @Keep
 @Parcelize
 class ArtistItemEntity(
+    @SerializedName("external_urls") val externalUrls: ExternalUrlsEntity? = null,
     @SerializedName("genres") val genres: List<String>? = listOf(),
     @SerializedName("href") val href: String? = "",
     @SerializedName("id") val id: String? = "",
     @SerializedName("images") val images: List<ImageEntity>? = listOf(),
     @SerializedName("name") val name: String? = "",
     @SerializedName("popularity") val popularity: Int? = -1,
-    @SerializedName("type") val type: String? = "",
-    @SerializedName("uri") val uri: String? = ""
+    @SerializedName("type") val type: String? = ""
 ): Parcelable

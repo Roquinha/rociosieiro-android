@@ -11,18 +11,19 @@
         android:label="searchFragment"
         tools:layout="@layout/search_fragment_layout">
 
-     <!--   <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />-->
-    </fragment>
-    <!--<fragment
-        android:id="@+id/SecondFragment"
-        android:name="com.example.applicationrociosieiro.SecondFragment"
-        android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
-
         <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
-    </fragment>-->
+            android:id="@+id/action_SearchFragment_to_ArtistDetailFragment"
+            app:destination="@id/ArtistDetailFragment" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/ArtistDetailFragment"
+        android:name="com.example.applicationrociosieiro.presentation.search.artistdetail.ArtistDetailFragment"
+        android:label="detailFragment"
+        tools:layout="@layout/artist_detail_fragment_layout">
+
+        <argument android:name="entryArg"
+            app:argType="com.example.applicationrociosieiro.presentation.search.artistdetail.ArtistDetailViewEntry" />
+    </fragment>
 </navigation>

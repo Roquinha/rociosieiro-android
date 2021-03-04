@@ -24,7 +24,7 @@ class SearchResultsAdapter: ListAdapter<ArtistItemEntity, BaseViewHolder>(
     }
 
     interface OnActionCallback {
-        fun onShareSelected(bulletin: ArtistItemEntity)
-        fun onArtistSelected(bulletin: ArtistItemEntity)
+        fun onShareSelected(artist: ArtistItemEntity)
+        fun onArtistSelected(id: String)
     }
 }

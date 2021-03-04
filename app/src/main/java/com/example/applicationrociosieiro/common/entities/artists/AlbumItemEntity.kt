@@ -12,5 +12,6 @@ class AlbumItemEntity(
         @SerializedName("images") val images: List<ImageEntity>? = listOf(),
         @SerializedName("name") val name: String? = "",
         @SerializedName("release_date") val releaseDate: String? = "",
-        @SerializedName("uri") val uri: String? = ""
+        @SerializedName("uri") val uri: String? = "",
+        var zoom: Int = 2
 ): Parcelable

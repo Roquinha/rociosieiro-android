@@ -20,4 +20,7 @@ sealed class ErrorEntity : Parcelable {
     @Parcelize
     object EmptyResult : ErrorEntity()
 
+    @Parcelize
+    object EmptyAlbums : ErrorEntity()
+
 }

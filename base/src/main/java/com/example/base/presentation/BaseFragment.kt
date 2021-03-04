@@ -1,0 +1,43 @@
+package com.example.base.presentation
+
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+
+abstract class BaseFragment<S : BaseState, T : BaseTransition> : Fragment() {
+    protected abstract val layoutRes: Int
+    protected abstract val viewModel: BaseViewModel<S, T>
+
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View = inflater.inflate(layoutRes, container, false)
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        initViews()
+        initObservers()
+    }
+
+    protected abstract fun initViews()
+
+    private fun initObservers() {
+        viewModel.getStates().forEach { states ->
+            states.observe(viewLifecycleOwner, Observer {
+                manageState(it)
+            })
+        }
+        viewModel.getTransition().observe(viewLifecycleOwner, Observer {
+            manageTransition(it)
+        })
+    }
+
+    protected abstract fun manageState(state: S)
+
+    protected abstract fun manageTransition(transition: T)
+
+}
